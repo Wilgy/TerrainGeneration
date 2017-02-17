@@ -1,7 +1,7 @@
 ///
-//  finalMain
+//  main
 //
-//  Main program for final project
+//  Main program for tesselation project
 //
 //  This code can be compiled as either C or C++.
 //
