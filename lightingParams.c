@@ -1,9 +1,7 @@
 ///
-//  lightingParams
+// lightingParams.c - passes relevant lighting parameters to the shaders
 //
-//  Created by Joe Geigel on 1/23/13.
-//
-//  This code can be compiled as either C or C++.
+// This code can be compiled as either C or C++.
 //
 // @author: T. Wilgenbusch (tjw8700)
 ///

@@ -1,9 +1,7 @@
 ///
-//  textureParams.c 
+// textureParams.c - sets up texture parameters for simple 2D objects
 //
-//  Created by Joe Geigel on 1/23/13.
-//
-//  This code can be compiled as either C or C++.
+// This code can be compiled as either C or C++.
 // @author T. Wilgenbusch
 ///
 
@@ -29,30 +27,20 @@ GLuint textureIds[MAX_TEXTURES];
 int currentIndex = 0;
 
 ///
-// loadCubeMapTexture loads a list of textures into Cube Map
+// loadTexture loads a single image as a texture to use
 //
-// @param x_pos_file - the positive x cube face
-// @param x_pos_file - the positive x cube face
-// @param x_pos_file - the positive x cube face
-// @param x_pos_file - the positive x cube face
-// @param x_pos_file - the positive x cube face
-// @param x_pos_file - the positive x cube face
+// @param tex_file - the image file to be used as a texture
 //
-// @return the index into the texture id being used
-///
-int loadCubeMapTexture(
-    const char *x_pos_file,
-    const char *x_neg_file,
-    const char *y_pos_file,
-    const char *y_neg_file,
-    const char *z_pos_file,
-    const char *z_neg_file)
+// @return the integer id of the texture loaded
+//
+int loadTexture(const char *tex_file)
 {
-    int texId = SOIL_load_OGL_cubemap
-    ( x_pos_file, x_neg_file, y_pos_file, y_neg_file, z_pos_file, z_neg_file,
+    int texId = SOIL_load_OGL_texture
+    (
+        tex_file,
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
-        0
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_TEXTURE_REPEATS
     );
 
     // check for an error during the load process
@@ -72,24 +60,22 @@ int loadCubeMapTexture(
 ///
 // This function sets up the parameters for texture use.
 //
-// You will need to write this function, and maintain all of the values
-// needed to be sent to the various shaders.
-//
 // @param program - The ID of an OpenGL (GLSL) shader program to which
 //    parameter values are to be sent
+// @param index - The index of the relevant texture to set up and bind
 ///
-void setUpTexture (GLuint program, int index)
-{
-    // Set up CubeMap parameters
-    glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-    glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-    glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE );
+void setUpTexture(GLuint program, int index)
+{    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    // Bind the passed in texture to the current active texture and pass the information down
-    // to the fragment shader
+    // glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+    // glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+
+    // Bind the passed in texture to the current active texture and pass the 
+    // information down to the fragment shader
     glActiveTexture(GL_TEXTURE0 + index);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, textureIds[index]);
+    glBindTexture(GL_TEXTURE_2D, textureIds[index]);
 
     GLint textureLoc = glGetUniformLocation(program, "texture");
     glUniform1i(textureLoc, index);

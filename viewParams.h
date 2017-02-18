@@ -1,7 +1,6 @@
 ///
-//  viewParams.h
+// viewParams.h
 //
-//  Created by Joe Geigel on 1/23/13.
 // @author T. Wilgenbusch
 ///
 

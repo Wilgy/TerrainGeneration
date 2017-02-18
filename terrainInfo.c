@@ -25,7 +25,7 @@
 #include <SOIL.h>
 #endif
 
-#include "blockInfo.h"
+#include "terrainInfo.h"
 
 // Transformation information for each terrain block
 GLfloat terrainRotate[3] = {-90.0f, 0.0f, 0.0f};
@@ -78,7 +78,6 @@ static void fillTerrainTransformInfo()
     {
         for(int j = 0; j < TERRAIN_SIDE_LENGTH; j++)
         {
-
             terrainTranslate[TERRAIN_SIDE_LENGTH * i + j][0] =  j;
             terrainTranslate[TERRAIN_SIDE_LENGTH * i + j][1] =  -1.0f;
             terrainTranslate[TERRAIN_SIDE_LENGTH * i + j][2] =  i;
@@ -87,10 +86,10 @@ static void fillTerrainTransformInfo()
 }
 
 ///
-// fillBlockTransformInfo fills in all of the transformation information, 
-// primarly the translation values, for all the blocks in the scene
+// fillTransformInfo fills in all of the transformation information, 
+// primarily the translation values, for all the blocks in the scene
 ///
-void fillBlockTransformInfo()
+void fillTransformInfo()
 {
     fillTerrainTransformInfo();
 }

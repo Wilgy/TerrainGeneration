@@ -19,10 +19,10 @@
 #include "simpleShape.h"
 #include "floatVector.h"
 
-/**
- * common variables...should probably make this a class and make these
- * data members
- */
+///
+// common variables...should probably make this a class and make these
+// data members
+///
 floatVector_t points;
 floatVector_t normals;
 floatVector_t uv;
@@ -32,9 +32,9 @@ float *uvArray = 0;
 GLushort *elemArray = 0;
 
 
-/**
- * clear the current shape
- */
+///
+// clear the current shape
+///
 void clearShape ()
 {
     if (pointArray) {
@@ -53,9 +53,9 @@ void clearShape ()
 }
 
 
-/**
- * adds a triangle to the current shape
- */
+///
+// adds a triangle to the current shape
+///
 void addTriangleWithTexCoords(float x0, float y0, float z0, float u0, float v0, 
                   float x1, float y1, float z1, float u1, float v1, 
                   float x2, float y2, float z2, float u2, float v2)
@@ -121,9 +121,10 @@ void addTriangleWithTexCoords(float x0, float y0, float z0, float u0, float v0,
     floatVectorPushBack( &uv, v2 );
     
 }
-/**
- * adds a triangle to the current shape using calculated normals
- */
+
+///
+// adds a triangle to the current shape using calculated normals
+///
 void addTriangle(
     float x0, float y0, float z0,
     float x1, float y1, float z1,
@@ -149,9 +150,9 @@ void addTriangle(
     );
 }
 
-/**
- * adds a triangle to the current shape using supplied normals
- */
+///
+// adds a triangle to the current shape using supplied normals
+///
 void addTriangleWithNorms(
     float x0, float y0, float z0,
     float x1, float y1, float z1,
@@ -189,9 +190,9 @@ void addTriangleWithNorms(
 
 }
 
-/**
- * adds only a triangle's vertices to object
- */
+///
+// adds only a triangle's vertices to object
+///
 void addTriangleVertices(    
     float x0, float y0, float z0,
     float x1, float y1, float z1,
@@ -213,9 +214,9 @@ void addTriangleVertices(
     floatVectorPushBack( &points, 1.0 );
 }
 
-/**
- * gets the vertex points for the current shape
- */
+///
+// gets the vertex points for the current shape
+///
 float *getVertices ()
 {
     int i;
@@ -239,9 +240,9 @@ float *getVertices ()
     return pointArray;
 }
 
-/**
- * gets the normals for the current shape
- */
+///
+// gets the normals for the current shape
+///
 float *getNormals ()
 {
     int i;
@@ -265,9 +266,9 @@ float *getNormals ()
     return normalArray;
 }
 
-/**
- * gets the texture coords for the current shape
- */
+///
+// gets the texture coords for the current shape
+///
 float *getUV ()
 {
     int i;
@@ -291,9 +292,9 @@ float *getUV ()
     return uvArray;
 }
 
-/**
- * gets the  array of elements for the  current shape
- */
+///
+// gets the  array of elements for the  current shape
+///
 GLushort *getElements ()
 {
     int i;
@@ -317,9 +318,9 @@ GLushort *getElements ()
     return elemArray;
 }
 
-/**
- * returns number of vertices in current shape
- */
+///
+// returns number of vertices in current shape
+///
 int nVertices ()
 {
     return floatVectorSize(&points) / 4;

@@ -1,19 +1,19 @@
 ///
-// cube.frag - A vertex shader that implements a basic
-// Phong Illumination Model for CubeMap texture objects
+// square.frag - A vertex shader that implements a basic
+// Phong Illumination Model for 2D texture objects
 //
 // @author T. Wilgenbusch
 ///
 
 // INCOMING DATA
-// Homogenous vertex coordinates
+// Homogeneous vertex coordinates
 attribute vec4 vPosition;
 
 // Normal vector at vertex (in model space)
 attribute vec3 vNormal;
 
 // Texture Coordinates at vertex
-attribute vec2 vTexCoord; // Unused by the the CubeMap sampler
+attribute vec2 vTexCoord; // Unused by the the 2D sampler
 
 // Model transformations
 uniform vec3 theta;
@@ -33,7 +33,7 @@ uniform float bottom;
 uniform float near;
 uniform float far;
 
-// Material properites
+// Material properties
 uniform vec4 ambColor;
 uniform float ambRefCoef;
 
@@ -74,7 +74,7 @@ varying vec4 viewCPos;
 varying vec4 modelViewPos;
 
 // To be interpolated by the fragment shader
-varying vec3 texCoord;
+varying vec2 texCoord;
 
 void main()
 {    
@@ -179,6 +179,6 @@ void main()
 
     // Pass on texture coords; since this is a cube map, we just 
     // use the original position of the vertex for the sampler
-    texCoord = vPosition.xyz;
+    texCoord = vPosition.xy;
 }
 

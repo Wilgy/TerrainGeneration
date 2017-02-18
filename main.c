@@ -1,7 +1,5 @@
 ///
-//  main
-//
-//  Main program for tesselation project
+//  main.c - main program for tessellation project
 //
 //  This code can be compiled as either C or C++.
 //
@@ -35,7 +33,7 @@
 #include "textureParams.h"
 #include "lightingParams.h"
 #include "viewParams.h"
-#include "blockInfo.h"
+#include "terrainInfo.h"
 
 #ifdef __cplusplus
 using namespace std;
@@ -76,9 +74,7 @@ int numVerts[NUM_OBJ];
 int NumElements;
 
 // Information for the textures
-int grassTexIndex, stoneTexIndex,
-    oakPlankTexIndex, oakLogTexIndex, cobbleStoneTexIndex, leavesTexIndex, 
-    sheepLegTexIndex, sheepBodyTexIndex, sheepHeadTexIndex;
+int grassTexIndex, stoneTexIndex;
 
 // program IDs...for program and parameters
 GLuint program;
@@ -282,7 +278,7 @@ static void moveDirection(enum Direction direction)
     }
 
     // update where we are looking at as well
-    changeLook(0.0f, 0.0f);
+    // changeLook(0.0f, 0.0f);
 }
 
 ///
@@ -291,7 +287,7 @@ static void moveDirection(enum Direction direction)
 void init() {
     
     // Load shaders and use the resulting shader program
-    program = shaderSetup( "cube.vert", "cube.frag" );
+    program = shaderSetup( "square.vert", "square.frag" );
     if (!program) {
 #ifdef __cplusplus
         cerr << "Error setting up shaders - "
@@ -309,6 +305,7 @@ void init() {
     // Disable culling of back face while using 2-d squares 
     // glEnable(GL_CULL_FACE);
     // glCullFace(GL_BACK);
+
     glClearColor( 0.2, 0.5, 1.0, 0.0 );
     glDepthFunc( GL_LEQUAL );
     glClearDepth( 1.0f );
@@ -323,17 +320,14 @@ void init() {
     createShapes();
 
     // Fill in correct block transformation information
-    fillBlockTransformInfo();
+    fillTransformInfo();
 
     // set default look position of the camera (looking directly at the scene)
     changeLook(0.0f, PI/2.0f);
 
     // load textures
-    grassTexIndex = loadCubeMapTexture("dirt-grass-left.png", 
-        "dirt-grass-right.png", "dirt-grass-down.png", 
-        "dirt-grass.png", "dirt-grass-top.png", "dirt-plain.png" );
-    stoneTexIndex = loadCubeMapTexture("stone.png", "stone.png", 
-        "stone.png", "stone.png", "stone.png", "stone.png");
+    grassTexIndex = loadTexture("dirt-grass-top.png");
+    stoneTexIndex = loadTexture("stone.png");
 }
 
 
@@ -525,7 +519,6 @@ void keyboard( unsigned char key, int x, int y )
 
         // Exit the program
         case 033:  // Escape key
-        case 'q': case 'Q':
             exit( 0 );
         break;
     } 
@@ -549,7 +542,7 @@ int main (int argc, char **argv)
     glutInit( &argc, argv );
     glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH );
     glutInitWindowSize( 512, 512 );
-    glutCreateWindow( "CG - Final Project" );
+    glutCreateWindow( "Tessellation Project" );
     
 #ifndef __APPLE__
     glewInit();

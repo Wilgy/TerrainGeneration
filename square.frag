@@ -1,12 +1,12 @@
 ///
-// cube.frag - A fragment shader that implements a basic
-// Phong Illumination Model for CubeMap texured objects
+// square.frag - A fragment shader that implements a basic
+// Phong Illumination Model for 2D textured objects
 //
 // @author T. Wilgenbusch
 ///
 
-// The sampler for the currect texture (may be unused)
-uniform samplerCube texture;
+// The sampler for the current texture (may be unused)
+uniform sampler2D texture;
 
 // The base color of the object (before the specular highlight)
 varying vec4 color;
@@ -16,7 +16,7 @@ varying vec4 diffuse;
 varying vec4 specular;
 varying float exp;
 
-// The tranformed normal and lighting vectors
+// The transformed normal and lighting vectors
 varying vec4 normal;
 varying vec4 lighting;
 
@@ -26,7 +26,7 @@ varying vec4 viewCPos;
 // The vertex position in model view coords
 varying vec4 modelViewPos;
 
-varying vec3 texCoord;
+varying vec2 texCoord;
 
 void main() 
 { 
@@ -42,7 +42,7 @@ void main()
     float dotRV = max(dot(R, V), 0.0);
 
     // The color of the texture
-    vec4 texColor = textureCube(texture, texCoord);
+    vec4 texColor = texture2D(texture, texCoord);
 
     // Compute the final color with the specular highlight
     gl_FragColor = ( color + diffuse ) * texColor + ( specular * pow(dotRV, exp) );

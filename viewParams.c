@@ -1,9 +1,7 @@
 ///
-//  viewParams
-//
-//  Created by Joe Geigel on 1/23/13.
-//
-//  This code can be compiled as either C or C++.
+// viewParams.c - Sets up the view (camera) parameters to be sent to the vertex
+// shader
+// This code can be compiled as either C or C++.
 //
 // @author T. Wilgenbusch (tjw8700)
 ///
@@ -80,8 +78,7 @@ void clearTransforms( GLuint program )
 
 ///
 // This function sets up the transformation parameters for the vertices
-// of the teapot.  The order of application is specified in the driver
-// program.
+// The order of application is specified in the driver program.
 //
 //
 // @param program - The ID of an OpenGL (GLSL) shader program to which

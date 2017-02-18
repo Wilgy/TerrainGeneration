@@ -27,7 +27,7 @@
 
 #define DEFAULT_TESS 1
 
-// The maximum values for the unit length objects being tessalated
+// The maximum values for the unit length objects being tessellated
 #define UNIT_WIDTH 1.0f
 #define UNIT_MAX UNIT_WIDTH/2.0f
 #define UNIT_MIN -UNIT_MAX
@@ -168,7 +168,7 @@ void makeSquare (int subdivisions)
 }
 
 ///
-// makeDefaultSquare - creates a "unit" sqaure
+// makeDefaultSquare - creates a "unit" square
 ///
 void makeDefaultSquare()
 {

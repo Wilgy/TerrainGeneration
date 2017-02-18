@@ -4,6 +4,7 @@
 // Header file for functions that manage the current shape 
 // being defined (including the addTriangles() function.
 //
+// @author T. Wilgenbusch
 ///
 
 #ifndef _SIMPLESHAPE_H_

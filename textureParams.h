@@ -1,10 +1,8 @@
-//
-//  textureParams.h
+///
+// textureParams.h
 //  
-//
-//  Created by Joe Geigel on 1/23/13.
-//
-//
+// @author T. Wilgenbusch
+///
 
 #ifndef _TEXTUREPARAMS_H_
 #define _TEXTUREPARAMS_H_
@@ -18,13 +16,8 @@
 #include <GL/gl.h>
 #endif
 
-int loadCubeMapTexture(
-	const char *x_pos_file,
-	const char *x_neg_file,
-	const char *y_pos_file,
-	const char *y_neg_file,
-	const char *z_pos_file,
-	const char *z_neg_file);
+int loadTexture (const char *tex_file);
+
 void setUpTexture (GLuint program, int index);
 
 #endif 

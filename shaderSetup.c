@@ -1,13 +1,14 @@
-/*
-** shaderSetup
-**
-** Sets up a GLSL shader based on supplied source files.
-**
-** Based on code from www.lighthouse3d.com
-**
-** This code can be compiled as either C or C++.
-*/
-
+///
+// shaderSetup
+//
+// Sets up a GLSL shader based on supplied source files.
+//
+// Based on code from www.lighthouse3d.com
+//
+// This code can be compiled as either C or C++.
+//
+// @author T. Wilgenbusch
+///
 #ifdef __cplusplus
 #include <cstdio>
 #include <cstdlib>
@@ -20,42 +21,44 @@
 
 #include "shaderSetup.h"
 
-/*
-** shaderErrorCode
-**
-** Contains a code (see shaderSetup.h) indicating the status
-** of the most recent shaderSetup() call
-*/
-
+///
+// shaderErrorCode
+//
+// Contains a code (see shaderSetup.h) indicating the status
+// of the most recent shaderSetup() call
+///
 GLuint shaderErrorCode;
 
-/*
-** read_text_file(name)
-**
-** Read the text file given as 'name'.
-**
-** Returns the contents of the file in a dynamically-allocated
-** string buffer, or NULL if an error occurs.
-*/
-
-GLchar *read_text_file( const char *name ) {
+///
+// read_text_file(name)
+//
+// Read the text file given as 'name'.
+//
+// Returns the contents of the file in a dynamically-allocated
+// string buffer, or NULL if an error occurs.
+///
+GLchar *read_text_file( const char *name ) 
+{
     FILE *fp;
     GLchar *content = NULL;
     int count=0;
 
-    if( name != NULL ) {
+    if( name != NULL ) 
+    {
 
         // Attempt to open the file
         // On Windows systems, may want to use "rt" here
         fp = fopen( name, "r" );
-        if( fp != NULL ) {
+        if( fp != NULL ) 
+        {
 
             // Determine its length
             fseek( fp, 0, SEEK_END );
             count = ftell( fp );
             rewind( fp );
 
-            if( count > 0 ) {
+            if( count > 0 ) 
+            {
 
                 // Allocate the string buffer
 #ifdef __cplusplus
@@ -70,10 +73,14 @@ GLchar *read_text_file( const char *name ) {
             }
 
             fclose(fp);
-        } else {
+        } 
+        else 
+        {
             perror( name );
         }
-    } else {
+    } 
+    else 
+    {
         fprintf( stderr, "error:  no file name specified\n" );
     }
 
@@ -81,13 +88,13 @@ GLchar *read_text_file( const char *name ) {
 
 }
 
-/*
-** print_shader_info_log(shader)
-**
-** Print the information log from a shader compilation attempt
-*/
-
-void print_shader_info_log( GLuint shader ) {
+///
+// print_shader_info_log(shader)
+//
+// Print the information log from a shader compilation attempt
+///
+void print_shader_info_log( GLuint shader ) 
+{
     GLint length = 0;
     GLsizei nchars  = 0;
     char *log;
@@ -95,7 +102,8 @@ void print_shader_info_log( GLuint shader ) {
     // Determine the length of the information log
     glGetShaderiv( shader, GL_INFO_LOG_LENGTH, &length );
 
-    if( length > 0 ) {
+    if( length > 0 ) 
+    {
 
         // Allocate a buffer for the log
 #ifdef __cplusplus
@@ -104,13 +112,15 @@ void print_shader_info_log( GLuint shader ) {
         log = (char *) malloc( length );
 #endif
 
-        if( log != NULL ) {
+        if( log != NULL ) 
+        {
 
             // Retrieve the log
             glGetShaderInfoLog( shader, length, &nchars, log );
 
             // Report it
-            if( log[0] != '\0' ) {
+            if( log[0] != '\0' ) 
+            {
                 printf( "Shader log:  '%s'\n", log );
             }
 
@@ -120,26 +130,27 @@ void print_shader_info_log( GLuint shader ) {
             free( log );
 #endif
 
-        } else {
+        } 
+        else 
+        {
 
             printf( "Shader log non-empty, but allocate failed\n" );
 
         }
     }
-
 }
 
-/*
-** print_program_info_log(shader)
-**
-** Print a program information log
-**
-** This is identical to print_shader_info_log(), except that it uses
-** glGetProgramiv() and glGetProgramInfoLog() instead of the *Shader*()
-** versions.
-*/
-
-void print_program_info_log( GLuint shader ) {
+///
+// print_program_info_log(shader)
+//
+// Print a program information log
+//
+// This is identical to print_shader_info_log(), except that it uses
+// glGetProgramiv() and glGetProgramInfoLog() instead of the *Shader*()
+// versions.
+///
+void print_program_info_log( GLuint shader ) 
+{
     GLint length = 0;
     GLsizei nchars  = 0;
     char *log;
@@ -147,7 +158,8 @@ void print_program_info_log( GLuint shader ) {
     // Determine the length of the information log
     glGetProgramiv( shader, GL_INFO_LOG_LENGTH, &length );
 
-    if( length > 0 ) {
+    if( length > 0 ) 
+    {
 
         // Allocate a buffer for the log
 #ifdef __cplusplus
@@ -156,13 +168,15 @@ void print_program_info_log( GLuint shader ) {
         log = (char *) malloc( length );
 #endif
 
-        if( log != NULL ) {
+        if( log != NULL ) 
+        {
 
             // Retrieve the log
             glGetProgramInfoLog( shader, length, &nchars, log );
 
             // Report it
-            if( log[0] != '\0' ) {
+            if( log[0] != '\0' ) 
+            {
                 printf( "Program log:  '%s'\n", log );
             }
 
@@ -172,7 +186,9 @@ void print_program_info_log( GLuint shader ) {
             free( log );
 #endif
 
-        } else {
+        } 
+        else 
+        {
 
             printf( "Program log non-empty, but allocate failed\n" );
 
@@ -180,17 +196,18 @@ void print_program_info_log( GLuint shader ) {
     }
 }
 
-/*
-** errorString( code )
-**
-** Returns a const char* with a text version of the supplied error code.
-*/
-
-const char *errorString( GLuint code ) {
+///
+// errorString( code )
+//
+// Returns a const char* with a text version of the supplied error code.
+///
+const char *errorString( GLuint code ) 
+{
     const char *msg;
     static char buffer[256];
 
-    switch( code ) {
+    switch( code ) 
+    {
 
         case E_NO_ERROR:
             msg = "No error";
@@ -226,28 +243,28 @@ const char *errorString( GLuint code ) {
 
 }
 
-/*
-** shaderSetup(vertex,fragment)
-**
-** Set up a GLSL shader program.
-**
-** Requires the name of a vertex program and a fragment
-** program.  Returns a handle to the created GLSL program
-**
-** Arguments:
-**    vert   - vertex shader program source file
-**    frag   - fragment shader program source file
-**    errors - pointer to variable to be incremented in case of error
-**
-** On success:
-**      returns the GLSL shader program handle, and sets the global
-**      shaderErrorCode to E_NO_ERROR.
-**
-** On failure:
-**    returns 0, and shaderErrorCode contains an error code
-*/
-
-GLuint shaderSetup( const char *vert, const char *frag ) {
+///
+// shaderSetup(vertex,fragment)
+//
+// Set up a GLSL shader program.
+//
+// Requires the name of a vertex program and a fragment
+// program.  Returns a handle to the created GLSL program
+//
+// Arguments:
+//    vert   - vertex shader program source file
+//    frag   - fragment shader program source file
+//    errors - pointer to variable to be incremented in case of error
+//
+// On success:
+//      returns the GLSL shader program handle, and sets the global
+//      shaderErrorCode to E_NO_ERROR.
+//
+// On failure:
+//    returns 0, and shaderErrorCode contains an error code
+///
+GLuint shaderSetup( const char *vert, const char *frag ) 
+{
     GLchar *vsrc = NULL, *fsrc = NULL;
     GLuint vs, fs, prog;
     GLint flag;
@@ -261,7 +278,8 @@ GLuint shaderSetup( const char *vert, const char *frag ) {
     
     // Read in shader source
     vsrc = read_text_file( vert );
-    if( vsrc == NULL ) {
+    if( vsrc == NULL ) 
+    {
         fprintf( stderr, "Error reading vertex shader file %s\n",
              vert);
         shaderErrorCode = E_VS_LOAD;
@@ -298,7 +316,8 @@ GLuint shaderSetup( const char *vert, const char *frag ) {
     glCompileShader( vs );
     glGetShaderiv( vs, GL_COMPILE_STATUS, &flag );
     print_shader_info_log( vs );
-    if( flag == GL_FALSE ) {
+    if( flag == GL_FALSE ) 
+    {
         shaderErrorCode = E_VS_COMPILE;
         return( 0 );
     }
@@ -306,7 +325,8 @@ GLuint shaderSetup( const char *vert, const char *frag ) {
     glCompileShader( fs );
     glGetShaderiv( fs, GL_COMPILE_STATUS, &flag );
     print_shader_info_log( fs );
-    if( flag == GL_FALSE ) {
+    if( flag == GL_FALSE ) 
+    {
         shaderErrorCode = E_FS_COMPILE;
         return( 0 );
     }
@@ -323,11 +343,11 @@ GLuint shaderSetup( const char *vert, const char *frag ) {
     glLinkProgram( prog );
     glGetProgramiv( prog, GL_LINK_STATUS, &flag );
     print_program_info_log( prog );
-    if( flag == GL_FALSE ) {
+    if( flag == GL_FALSE ) 
+    {
         shaderErrorCode = E_SHADER_LINK;
         return( 0 );
     }
     
     return( prog );
-
 }
