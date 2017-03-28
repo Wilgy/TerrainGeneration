@@ -1,5 +1,5 @@
 #
-# Created by gmakemake (Ubuntu Oct  3 2011) on Fri Feb 17 21:01:30 2017
+# Created by gmakemake (Ubuntu Oct  3 2011) on Tue Mar 28 17:04:49 2017
 #
 
 #
@@ -76,13 +76,13 @@ CCLIBFLAGS = $(LIBFLAGS)
 
 
 CPP_FILES =	
-C_FILES =	cgSquare.c floatVector.c lightingParams.c main.c shaderSetup.c simpleShape.c terrainInfo.c textureParams.c viewParams.c
+C_FILES =	cgChunk.c floatVector.c lightingParams.c main.c shaderSetup.c simpleShape.c terrainInfo.c textureParams.c viewParams.c
 PS_FILES =	
 S_FILES =	
-H_FILES =	cgSquare.h floatVector.h lightingParams.h shaderSetup.h simpleShape.h terrainInfo.h textureParams.h viewParams.h
+H_FILES =	cgChunk.h floatVector.h lightingParams.h shaderSetup.h simpleShape.h terrainInfo.h textureParams.h viewParams.h
 SOURCEFILES =	$(H_FILES) $(CPP_FILES) $(C_FILES) $(S_FILES)
 .PRECIOUS:	$(SOURCEFILES)
-OBJFILES =	cgSquare.o floatVector.o lightingParams.o shaderSetup.o simpleShape.o terrainInfo.o textureParams.o viewParams.o 
+OBJFILES =	cgChunk.o floatVector.o lightingParams.o shaderSetup.o simpleShape.o terrainInfo.o textureParams.o viewParams.o 
 
 #
 # Main targets
@@ -97,10 +97,10 @@ main:	main.o $(OBJFILES)
 # Dependencies
 #
 
-cgSquare.o:	simpleShape.h
+cgChunk.o:	cgChunk.h simpleShape.h
 floatVector.o:	floatVector.h
 lightingParams.o:	lightingParams.h
-main.o:	cgSquare.h lightingParams.h shaderSetup.h simpleShape.h terrainInfo.h textureParams.h viewParams.h
+main.o:	cgChunk.h lightingParams.h shaderSetup.h simpleShape.h textureParams.h viewParams.h
 shaderSetup.o:	shaderSetup.h
 simpleShape.o:	floatVector.h simpleShape.h
 terrainInfo.o:	terrainInfo.h

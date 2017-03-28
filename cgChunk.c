@@ -1,21 +1,16 @@
 ///
-// cgSquare.c
+// cgChunk.c
 //
-// Routines for tessellating a 2-d square
+// Routines for tessellating and randomly generating a chunk of squares
 //
 // This code can be compiled as either C or C++.
 //
 // @author T. Wilgenbusch
 ///
 
-#ifdef __APPLE__
-#include <OpenGL/gl.h>
-#else
-#include <GL/glew.h>
-#include <GL/gl.h>
-#endif
-
+#include "cgChunk.h"
 #include "simpleShape.h"
+
 
 #ifdef __cplusplus
 #include <cmath>
@@ -23,9 +18,6 @@
 #include <math.h>
 #endif
 
-#include <stdio.h>
-
-#define DEFAULT_TESS 1
 
 // The maximum values for the unit length objects being tessellated
 #define UNIT_WIDTH 1.0f
@@ -38,6 +30,98 @@
 
 // Definition of PI
 #define PI 3.14159265358979323846
+
+///
+// makeSquare - allocates space for a square structure with default values
+//
+// @return A pointer to the generated square
+///
+Square *makeSquare()
+{
+    Square *result = (Square *)malloc(sizeof(Square));
+    result->x = 0.0f;
+    result->y = 0.0f;
+    result->z = 0.0f;
+
+    for(int x = 0; x < NUM_POINTS; x++)
+    {
+        result->points[x] = 0.0f;
+    }
+
+    result->finished = false;
+
+    return result;
+}
+
+///
+// destroySquare - deallocates memory for the given square
+//
+// @param square - the sqaure to destroy
+///
+void destroySquare(Square *square)
+{
+    if(square)
+    {
+        free(square);
+    }
+}
+
+///
+// makeChunk - allocates space for a Chunk structure with default values
+//
+// @return A pointer to the generated Chunk
+///
+Chunk *makeChunk()
+{
+    Chunk *result = (Chunk *)malloc(sizeof(Chunk));
+    result->chunkX = 0.0f;
+    result->chunkY = 0.0f;
+
+    result->rotate[0] = -90.0f;
+    result->rotate[1] = 0.0f;
+    result->rotate[2] = 0.0f;
+    
+    result->scale[0] = 1.0f;
+    result->scale[1] = 1.0f;
+    result->scale[2] = 1.0f;
+
+    for(int x = 0; x < CHUNK_SIZE; x++)
+    {
+        for(int y = 0; y < CHUNK_SIZE; y++)
+        {
+            result->squares[x][y] = makeSquare();
+            result->squares[x][y]->x = (float)x;
+            result->squares[x][y]->y = (float)y;
+        }
+    }
+
+    return result;
+}
+
+///
+// destroyChunk - deallocates memory for the given Chunk
+//
+// @param chunk - the sqaure to destroy
+///
+void destroyChunk(Chunk *chunk)
+{
+    if(chunk)
+    {
+        for(int x = 0; x < CHUNK_SIZE; x++)
+        {
+            for(int y = 0; y < CHUNK_SIZE; y++)
+            {
+                if(chunk->squares[x][y])
+                {
+                    destroySquare(chunk->squares[x][y]);
+                }
+            }
+        }
+
+        free(chunk);
+    }
+}
+
 
 ///
 // getPointsFromCenter - given a point on the TOP face of a Square, calculates all
@@ -113,14 +197,14 @@ void addSquare(float cp[V_DIM], float sideLength)
 }
 
 ///
-// makeSquare - Create a unit Square, centered at the origin, with a given number
+// generateSquare - Create a unit Square, centered at the origin, with a given number
 // of subdivisions.
 //
 // @param subdivision - number of equal subdivisons to be made
 //
 // Can only use calls to addTriangle()
 ///
-void makeSquare (int subdivisions)
+void generateSquare(int subdivisions)
 {
     if( subdivisions < 1 )
         subdivisions = 1;
@@ -172,6 +256,6 @@ void makeSquare (int subdivisions)
 ///
 void makeDefaultSquare()
 {
-    makeSquare(DEFAULT_TESS);
+    generateSquare(TESS_FACTOR);
 }
 

@@ -29,11 +29,10 @@
 
 #include "shaderSetup.h"
 #include "simpleShape.h"
-#include "cgSquare.h"
+#include "cgChunk.h"
 #include "textureParams.h"
 #include "lightingParams.h"
 #include "viewParams.h"
-#include "terrainInfo.h"
 
 #ifdef __cplusplus
 using namespace std;
@@ -44,8 +43,16 @@ using namespace std;
 // Definition of PI
 #define PI 3.14159265358979323846
 
+// Definition for the max number of chunks we are creating
+#define NUM_CHUNKS 1
+
+// Storage for all the chunks
+// NOTE: We store the chunks as a 1d array, since we will most likely generate 
+//  the next chunks in an arbitrary order
+Chunk *chunks[NUM_CHUNKS];
+
 // The total number of objects in the scene (subject to change)
-#define NUM_OBJ NUM_TERRAIN_BLOCKS
+#define NUM_OBJ (NUM_CHUNKS * (CHUNK_SIZE * CHUNK_SIZE))
 
 bool moving = false;
 bool looking = false;
@@ -53,8 +60,8 @@ bool animating = false;
 
 float angles[3] = {0.0f, 0.0f, 0.0f};
 
-// Used for updating the camera position an look at
-float eyePoint[3] = {-3.0f, 1.0f, 8.0f};
+// Used for updating the camera position and look at
+float eyePoint[3] = {-3.0f, 2.0f, 8.0f};
 float lookAt[3] = { 6.0f, 1.0f, 8.0f };
 
 // The distance between the camera position and the lookAt position
@@ -71,7 +78,6 @@ float mouseSpeed = 0.0005f;
 GLuint buffer[NUM_OBJ];
 GLuint ebuffer[NUM_OBJ];
 int numVerts[NUM_OBJ];
-int NumElements;
 
 // Information for the textures
 int grassTexIndex, stoneTexIndex;
@@ -123,60 +129,75 @@ void selectBuffers(GLuint program,  int object)
 }
 
 ///
-// createShapes creates all of the shape's (i.e. blocks) vertices/normals and
+// createShapes creates all of the shape's vertices/normals and
 // passes the information to openGL
 ///
 void createShapes()
 {
     // Create all the objects
-    for(int i = 0; i < NUM_OBJ; i++)
+    for(int i = 0; i < NUM_CHUNKS; i++)
     {   
-        //Clear shape
-        clearShape();
-            
-        //make a shape
-        makeDefaultSquare();
+        // Allocate memory for chunk
+        chunks[i] = makeChunk();
 
-        // get the points for your shape
-        NumElements = nVertices() / 3;
-        float *points = getVertices();
-        int dataSize = nVertices() * 4 * sizeof (float);
+        // Create each square for this chunk
+        for(int x = 0; x < CHUNK_SIZE; x++)
+        {
+            for(int y = 0; y < CHUNK_SIZE; y++)
+            {
+                // index into the various buffers for this object
+                int index = (i * CHUNK_SIZE) + (x * CHUNK_SIZE) + y;
 
-        // Get normals for object
-        float *normals = getNormals();
-        int ndataSize = nVertices() * 3 * sizeof(float);
+                //Clear shape
+                clearShape();
+                    
+                //make a shape
+                makeDefaultSquare();
 
-        // Get tex coords for object
-        float *texCoords = getUV();
-        int tdataSize = nVertices() * 2 * sizeof (float);
+                // get the points for your shape
+                float *points = getVertices();
+                int dataSize = nVertices() * 4 * sizeof (float);
 
-        // Get element data for object
-        GLushort *elements = getElements();
-        int edataSize = nVertices() * sizeof (GLushort);
+                // Get normals for object
+                float *normals = getNormals();
+                int ndataSize = nVertices() * 3 * sizeof(float);
 
-        //generate the buffer
-        glGenBuffers( 1 , &buffer[i] );
-        //bind the buffer
-        glBindBuffer( GL_ARRAY_BUFFER , buffer[i] );
-        //buffer data
-        glBufferData( GL_ARRAY_BUFFER, dataSize + tdataSize + ndataSize, 
-            0, GL_STATIC_DRAW );
-        glBufferSubData ( GL_ARRAY_BUFFER, 0, dataSize, points);
-        glBufferSubData ( GL_ARRAY_BUFFER, dataSize, ndataSize, normals);
-        glBufferSubData ( GL_ARRAY_BUFFER, dataSize + ndataSize, 
-            tdataSize, texCoords);
+                // Get tex coords for object
+                float *texCoords = getUV();
+                int tdataSize = nVertices() * 2 * sizeof (float);
 
-        //generate the buffer
-        glGenBuffers( 1 , &ebuffer[i] );
-        //bind the buffer
-        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER , ebuffer[i] );
-        //buffer data
-        glBufferData( GL_ELEMENT_ARRAY_BUFFER, edataSize,
-            elements, GL_STATIC_DRAW );
+                // Get element data for object
+                GLushort *elements = getElements();
+                int edataSize = nVertices() * sizeof (GLushort);
 
-        //store the num verts
-        numVerts[i] = nVertices();
+                //generate the buffer
+                glGenBuffers( 1 , &buffer[index] );
+                //bind the buffer
+                glBindBuffer( GL_ARRAY_BUFFER , buffer[index] );
+                //buffer data
+                glBufferData( GL_ARRAY_BUFFER, dataSize + tdataSize + ndataSize, 
+                    0, GL_STATIC_DRAW );
+                glBufferSubData ( GL_ARRAY_BUFFER, 0, dataSize, points);
+                glBufferSubData ( GL_ARRAY_BUFFER, dataSize, ndataSize, normals);
+                glBufferSubData ( GL_ARRAY_BUFFER, dataSize + ndataSize, 
+                    tdataSize, texCoords);
+
+                //generate the buffer
+                glGenBuffers( 1 , &ebuffer[index] );
+                //bind the buffer
+                glBindBuffer( GL_ELEMENT_ARRAY_BUFFER , ebuffer[index] );
+                //buffer data
+                glBufferData( GL_ELEMENT_ARRAY_BUFFER, edataSize,
+                    elements, GL_STATIC_DRAW );
+
+                //store the num verts
+                numVerts[index] = nVertices();
+            }
+        }
     }
+
+    //Clear final shape that was generated
+    clearShape();
 }
 
 ///
@@ -314,13 +335,10 @@ void init() {
     glutSetCursor(GLUT_CURSOR_NONE); 
 
     // Creates wire frame view
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // create the geometry for your shapes.
     createShapes();
-
-    // Fill in correct block transformation information
-    fillTransformInfo();
 
     // set default look position of the camera (looking directly at the scene)
     changeLook(0.0f, PI/2.0f);
@@ -364,28 +382,44 @@ void display( void )
     int i;
     GLfloat *scale;
     GLfloat *rotate;
-    GLfloat *translate;
+    GLfloat translate[3];
 
     // Display terrain blocks
-    for(i = 0; i < NUM_TERRAIN_BLOCKS; i++)
+    for(i = 0; i < NUM_CHUNKS; i++)
     {            
-        clearTransforms(program);
-        scale = getTerrainScaleInfo(i);
-        rotate = getTerrainRotateInfo(i);
-        translate = getTerrainTranslateInfo(i);
-        setUpTexture(program, grassTexIndex);            
+        Chunk *cChunk = chunks[i];
 
-        // set up transformations 
-        setUpTransforms( program,
-            scale[0], scale[1], scale[2],
-            rotate[0] + angles[0], rotate[1] + angles[1], rotate[2] + angles[2],
-            translate[0], translate[1], translate[2]
-        );
+        for(int x = 0; x < CHUNK_SIZE; x++)
+        {
+            for(int y = 0; y < CHUNK_SIZE; y++)
+            {
+                int index = (NUM_CHUNKS * i) + (CHUNK_SIZE * x) + y;
 
-        //setup uniform variables to shader
-        selectBuffers(program, i);
-        // draw your shape
-        glDrawElements(GL_TRIANGLES ,numVerts[i],GL_UNSIGNED_SHORT, (void *)0 );
+                Square *cSquare = cChunk->squares[x][y];
+                clearTransforms(program);
+                scale = cChunk->scale;
+                rotate = cChunk->rotate;
+                translate[0] = cChunk->chunkX + cSquare->x; 
+                translate[1] = cSquare->z;
+                translate[2] = cChunk->chunkY + cSquare->y;
+                
+                // TODO: Move texture to individual square level
+                setUpTexture(program, grassTexIndex);            
+
+                // set up transformations 
+                setUpTransforms( program,
+                    scale[0], scale[1], scale[2],
+                    rotate[0] + angles[0], rotate[1] + angles[1], rotate[2] + angles[2],
+                    translate[0], translate[1], translate[2]
+                );
+
+                //setup uniform variables to shader
+                selectBuffers(program, index);
+                // draw your shape
+                glDrawElements(GL_TRIANGLES, numVerts[index], 
+                    GL_UNSIGNED_SHORT, (void *)0 );
+            }
+        }
     }
 
     // swap the buffers
@@ -556,5 +590,11 @@ int main (int argc, char **argv)
     glutMotionFunc( passiveMotion );
     glutPassiveMotionFunc( passiveMotion );
     glutMainLoop();
+
+    for(int i = 0; i < NUM_CHUNKS; i++)
+    {
+        destroyChunk(chunks[i]);
+    }
+
     return 0;
 }
