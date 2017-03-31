@@ -1,10 +1,11 @@
 ///
-// cgChunk.c
+// cgChunk
 //
 // Routines for tessellating and randomly generating a chunk of squares
 //
 // @author T. Wilgenbusch
 ///
+
 #ifndef _CGSHAPE_H_
 #define _CGSHAPE_H_
 
@@ -54,6 +55,7 @@
 // GLfloat points[] - The small variance from the base z-value of each 
 //                    tessellated point of this square, either randomly 
 //                    generated or interpolated
+// int texId        - The id for this squares texture
 // bool finished    - bool set when this square is set
 ///
 typedef struct Square_s
@@ -61,6 +63,7 @@ typedef struct Square_s
     GLfloat z;
     GLfloat x, y;
     GLfloat points[NUM_POINTS];
+    int texId;
     bool finished;
 } Square;
 
@@ -84,9 +87,13 @@ typedef struct  Chunk_s
 } Chunk;
 
 
+// Allocates space for a single chunk
 Chunk *makeChunk();
-void destroyChunk();
 
+// Frees all memory allocated to a chunk
+void destroyChunk(Chunk *chunk);
+
+// Populates the float vectors for a single square shape (to be passed to OpenGL)
 void makeDefaultSquare();
 
 #endif

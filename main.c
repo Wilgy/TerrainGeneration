@@ -145,6 +145,9 @@ void createShapes()
         {
             for(int y = 0; y < CHUNK_SIZE; y++)
             {
+                // Assign the correct texture for this square
+                chunks[i]->squares[x][y]->texId = grassTexIndex;
+
                 // index into the various buffers for this object
                 int index = (i * CHUNK_SIZE) + (x * CHUNK_SIZE) + y;
 
@@ -337,15 +340,16 @@ void init() {
     // Creates wire frame view
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+    // load textures
+    grassTexIndex = loadTexture("dirt-grass-top.png");
+    stoneTexIndex = loadTexture("stone.png");
+
     // create the geometry for your shapes.
     createShapes();
 
     // set default look position of the camera (looking directly at the scene)
     changeLook(0.0f, PI/2.0f);
 
-    // load textures
-    grassTexIndex = loadTexture("dirt-grass-top.png");
-    stoneTexIndex = loadTexture("stone.png");
 }
 
 
@@ -404,7 +408,7 @@ void display( void )
                 translate[2] = cChunk->chunkY + cSquare->y;
                 
                 // TODO: Move texture to individual square level
-                setUpTexture(program, grassTexIndex);            
+                setUpTexture(program, cSquare->texId);            
 
                 // set up transformations 
                 setUpTransforms( program,

@@ -31,7 +31,6 @@ float *normalArray = 0;
 float *uvArray = 0;
 GLushort *elemArray = 0;
 
-
 ///
 // clear the current shape
 ///
@@ -51,7 +50,6 @@ void clearShape ()
     floatVectorClear( &normals );
     floatVectorClear( &uv );
 }
-
 
 ///
 // adds a triangle to the current shape

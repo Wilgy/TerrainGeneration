@@ -42,6 +42,7 @@ Square *makeSquare()
     result->x = 0.0f;
     result->y = 0.0f;
     result->z = 0.0f;
+    result->texId = 0;
 
     for(int x = 0; x < NUM_POINTS; x++)
     {
@@ -92,8 +93,10 @@ Chunk *makeChunk()
             result->squares[x][y] = makeSquare();
             result->squares[x][y]->x = (float)x;
             result->squares[x][y]->y = (float)y;
+            printf("%lu\n", (long unsigned)result->squares[x][y]);
         }
     }
+
 
     return result;
 }
