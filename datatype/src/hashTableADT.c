@@ -1,5 +1,5 @@
 ///
-// hashTableADT.cpp a C/C++ implementation for Hash ADT module
+// hashTableADT.c a C/C++ implementation for Hash ADT module
 //  
 // Author: T. Wilgenbusch
 ///

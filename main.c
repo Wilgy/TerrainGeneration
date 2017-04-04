@@ -38,6 +38,11 @@
 using namespace std;
 #endif
 
+#define VERTEX_SHADER "shader/src/square.vert"
+#define FRAGMENT_SHADER "shader/src/square.frag"
+#define GRASS_IMAGE "object/data/dirt-grass-top.png"
+#define STONE_IMAGE "object/data/stone.png"
+
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 // Definition of PI
@@ -311,7 +316,7 @@ static void moveDirection(enum Direction direction)
 void init() {
     
     // Load shaders and use the resulting shader program
-    program = shaderSetup( "square.vert", "square.frag" );
+    program = shaderSetup( VERTEX_SHADER, FRAGMENT_SHADER );
     if (!program) {
 #ifdef __cplusplus
         cerr << "Error setting up shaders - "
@@ -341,8 +346,8 @@ void init() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // load textures
-    grassTexIndex = loadTexture("dirt-grass-top.png");
-    stoneTexIndex = loadTexture("stone.png");
+    grassTexIndex = loadTexture(GRASS_IMAGE);
+    stoneTexIndex = loadTexture(STONE_IMAGE);
 
     // create the geometry for your shapes.
     createShapes();

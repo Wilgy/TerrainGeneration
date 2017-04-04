@@ -3,14 +3,13 @@
 //
 // Routines for tessellating and randomly generating a chunk of squares
 //
-// This code can be compiled as either C or C++.
+// This code can be compiled as either C or C++. adasd
 //
 // @author T. Wilgenbusch
 ///
 
 #include "cgChunk.h"
 #include "simpleShape.h"
-
 
 #ifdef __cplusplus
 #include <cmath>
